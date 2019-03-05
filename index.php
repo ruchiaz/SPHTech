@@ -1,6 +1,13 @@
 <?php
  // inputs
-$input = ["Mark" => "S", "Adam" => "S", "Adam1" => "S", 'AA' => 'S', "DD" => "P", "EE" => "P"];
+$input = [
+    "Mark" => "P",
+    "Adam" => "R",
+    "Adam1" => "S",
+    'AA' => 'S',
+    "DD" => "S",
+    "EE" => "P"
+];
 
 /**
  * Get Winner
@@ -53,7 +60,11 @@ function checkForInvalidInput($allValues)
     }
     return true;
 }
-
+/**
+ * Search final winner
+ * @param $values inputs array
+ * @param $beatChoises Options which can beat as key
+ */
 function recursiveSearch($values, $beatChoises)
 {
 
@@ -62,29 +73,27 @@ function recursiveSearch($values, $beatChoises)
     $cloneValues = [];
 
     $index = 0;
-
-    foreach ($values as $name => $val) {
-        if ($previousValue != "") {
-            if ($previousValue === $val) {
-                $cloneValues = $cloneValues + [$previousName => $previousValue];
-            } elseif ($beatChoises[$previousValue] === $val) {
-                $cloneValues = $cloneValues + [$previousName => $previousValue];
-            } elseif ($beatChoises[$val] === $previousValue) {
-                $cloneValues = $cloneValues + [$name => $val];
+    do {
+        $cloneValues = [];
+        foreach ($values as $name => $val) {
+            if ($previousValue != "") {
+                if ($previousValue === $val) {
+                    $cloneValues = $cloneValues + [$previousName => $previousValue];
+                } elseif ($beatChoises[$previousValue] === $val) {
+                    $cloneValues = $cloneValues + [$previousName => $previousValue];
+                } elseif ($beatChoises[$val] === $previousValue) {
+                    $cloneValues = $cloneValues + [$name => $val];
+                }
+                $previousName = "";
+                $previousValue = "";
+            } else {
+                $previousName =  $name;
+                $previousValue = $val;
             }
-            $previousName = "";
-            $previousValue = "";
-        } else {
-            $previousName =  $name;
-            $previousValue = $val;
         }
-    }
-
-    if (count($cloneValues) === 1) {
-        return $cloneValues;
-    } else {
-        recursiveSearch($cloneValues, $beatChoises);
-    }
+        $values = $cloneValues;
+    } while (count($cloneValues) !== 1);
+    return $cloneValues;
 }
 
 echo getRPSWinner($input);
