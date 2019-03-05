@@ -28,8 +28,6 @@ function getRPSWinner($input)
         }
 
         $results = recursiveSearch($input, $beatChoises);
-        echo '*****';
-        print_r($results);
         $name = ($results) ? array_key_first($results) : "Error";
         return $name;
     } catch (Error $ex) {
@@ -68,7 +66,7 @@ function recursiveSearch($values, $beatChoises)
     foreach ($values as $name => $val) {
         if ($previousValue != "") {
             if ($previousValue === $val) {
-                $cloneValues = $cloneValues + [$previousName => $previousValue]; //$previous["name"] => $previous["value"]] ;
+                $cloneValues = $cloneValues + [$previousName => $previousValue];
             } elseif ($beatChoises[$previousValue] === $val) {
                 $cloneValues = $cloneValues + [$previousName => $previousValue];
             } elseif ($beatChoises[$val] === $previousValue) {
@@ -80,9 +78,8 @@ function recursiveSearch($values, $beatChoises)
             $previousName =  $name;
             $previousValue = $val;
         }
-        print_r($cloneValues);
     }
-    echo count($cloneValues);
+
     if (count($cloneValues) === 1) {
         return $cloneValues;
     } else {
